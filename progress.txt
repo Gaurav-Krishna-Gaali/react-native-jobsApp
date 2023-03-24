@@ -1,0 +1,6 @@
+https://youtu.be/mJ3bGvy0WAY?t=6209
+
+
+
+
+https://github.com/adrianhajdin/project_react_native_jobs/blob/main/components/jobdetails/tabs/Tabs.jsx
