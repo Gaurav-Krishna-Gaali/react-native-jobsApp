@@ -1,21 +1,19 @@
+import { Stack, useRouter, useSearchParams } from "expo-router";
+import { useCallback, useState } from "react";
 import {
-  Text,
   View,
+  Text,
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
 
-import { Stack, useRouter, useSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
-
 import {
   Company,
   JobAbout,
   JobFooter,
   JobTabs,
-  ScreenHeader,
   ScreenHeaderBtn,
   Specifics,
 } from "../../components";
@@ -32,10 +30,14 @@ const JobDetails = () => {
     job_id: params.id,
   });
 
-  const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {};
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  }, []);
 
   const displayTabContent = () => {
     switch (activeTab) {
@@ -46,10 +48,12 @@ const JobDetails = () => {
             points={data[0].job_highlights?.Qualifications ?? ["N/A"]}
           />
         );
+
       case "About":
         return (
           <JobAbout info={data[0].job_description ?? "No data provided"} />
         );
+
       case "Responsibilities":
         return (
           <Specifics
@@ -57,8 +61,9 @@ const JobDetails = () => {
             points={data[0].job_highlights?.Responsibilities ?? ["N/A"]}
           />
         );
+
       default:
-        break;
+        return null;
     }
   };
 
@@ -86,6 +91,7 @@ const JobDetails = () => {
           headerTitle: "",
         }}
       />
+
       <>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -113,6 +119,7 @@ const JobDetails = () => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
+
               {displayTabContent()}
             </View>
           )}
@@ -121,7 +128,7 @@ const JobDetails = () => {
         <JobFooter
           url={
             data[0]?.job_google_link ??
-            "https://careers.google.com/jobs/results"
+            "https://careers.google.com/jobs/results/"
           }
         />
       </>
